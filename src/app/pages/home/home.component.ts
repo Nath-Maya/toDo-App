@@ -14,4 +14,11 @@ export class HomeComponent {
     'Llamar a la universidad',
     'Hacer almuerzo'
   ])
+
+  changeHandler(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const newTasks = input.value;
+    //metodo para agregar un nuevo elemento al array sin resetearlo
+    this.tasks.update((tasks) => [...tasks, newTasks])
+  }
 }
