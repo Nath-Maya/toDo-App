@@ -19,6 +19,11 @@ export class HomeComponent {
     const input = event.target as HTMLInputElement;
     const newTasks = input.value;
     //metodo para agregar un nuevo elemento al array sin resetearlo
-    this.tasks.update((tasks) => [...tasks, newTasks])
+    this.tasks.update((tasks) => [...tasks, newTasks]) //se recibe el estado anterior y se agrega la nueva tarea
+  }
+
+  //Eliminar una tarea teniendo en cuenta con su idex
+  deleteTask(index : number) {
+    this.tasks.update((tasks) => tasks.filter((task, position) => position !== index)) //se deja por fuera el elemento que coincida con el idex.
   }
 }
