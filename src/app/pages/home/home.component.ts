@@ -1,7 +1,6 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, effect, inject, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { Task } from '../../models/task.models';
 
 @Component({
@@ -12,18 +11,26 @@ import { Task } from '../../models/task.models';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  tasks = signal<Task[]>([
-    {
-      id: Date.now(),
-      title: 'Crear proyecto',
-      completed: false
-    },
-    {
-      id: Date.now(),
-      title: 'Estudiar Platzi',
-      completed: false
+
+  tasks = signal<Task[]>([]);
+
+  injector = inject(Injector)
+
+  ngOnInit() {
+    const storage = localStorage.getItem('tasks');
+    if (storage) {
+      const tasks = JSON.parse(storage)
+      this.tasks.set(tasks);
     }
-  ]);
+    this.trackTasks()
+  }
+
+  trackTasks() {
+    effect(() => {
+      const tasks = this.tasks();
+      localStorage.setItem('tasks', JSON.stringify(tasks)) //guardo las tareas en formato json
+    }, { injector: this.injector})
+  }
 
   filter = signal('all');
   tasksByFilter = computed(() => {
